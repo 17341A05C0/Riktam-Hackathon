@@ -124,3 +124,4 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = '/home/sriharsha/PycharmProjects/riktam/hackathon/user/media/'
 MEDIA_URL = '/media/'
+

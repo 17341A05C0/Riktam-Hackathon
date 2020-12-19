@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import  render,redirect
-from .models import User
+from .models import User, Issue
 from django.contrib.auth.hashers import make_password, check_password
 import json
 import crypt
@@ -8,7 +8,10 @@ import crypt
 def index(request):
     if request.session.get('Name'):
         name=request.session['Name']
-        return render(request,'index.html',{"name":name})
+        issues=Issue.objects.all()
+
+        return render(request,'index.html',{"name":name,"issues":issues})
+
     return redirect('user:login')
 
 def login(request):
@@ -30,7 +33,7 @@ def login(request):
             if i[0]==mail:
                 if check_password(password,i[1]):
                     request.session['Name']=i[2]
-                    return HttpResponse("True")
+                    return redirect('user:index')
         return render(request,'login.html',{"error":"Incorrect Details","mail":mail,"list":mails})
 
     return render(request,'login.html',{"list":a})

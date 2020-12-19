@@ -1,8 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import User, Post, Like, Comment
+from .models import User, Issue, Vote, Message
 admin.site.register(User)
-admin.site.register(Post)
-admin.site.register(Like)
-admin.site.register(Comment)
+admin.site.register(Issue)
+admin.site.register(Vote)
+admin.site.register(Message)

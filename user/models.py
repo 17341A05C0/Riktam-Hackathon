@@ -8,23 +8,32 @@ class User(models.Model):
     photo=models.ImageField(upload_to ='data/')
     time=models.DateTimeField(auto_now_add=True)
 
-class Post(models.Model):
+class Issue(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     caption=models.TextField(max_length=200)
     location=models.TextField(max_length=200)
-    likes=models.IntegerField(default=0)
-    image=models.ImageField(upload_to='posts/')
+    votes=models.IntegerField(default=0)
+    image=models.ImageField(upload_to='Issues/')
     time=models.DateTimeField(auto_now_add=True)
+    Choices= (
+        (1,'Submitted to the newspaper'),
+        (2,'resolved'),
+        (3,'no action taken'),
+        (4,'open')
+    )
+    status=models.IntegerField(max_length=100,choices=Choices,default=4)
 
 
-class Like(models.Model):
+class Vote(models.Model):
     user_id=models.ForeignKey(User,on_delete=models.CASCADE)
-    post_id=models.ForeignKey(Post,on_delete=models.CASCADE)
+    issue_id=models.ForeignKey(Issue,on_delete=models.CASCADE)
 
 
-class Comment(models.Model):
-    comment=models.TextField(max_length=200)
+    class Meta:
+        unique_together = (("user_id", "issue_id"),)
+
+class Message(models.Model):
+    message=models.TextField(max_length=200)
     user_id=models.ForeignKey(User,on_delete=models.CASCADE)
-    post_id=models.ForeignKey(Post,on_delete=models.CASCADE)
+    issue_id=models.ForeignKey(Issue,on_delete=models.CASCADE)
     time=models.DateTimeField(auto_now_add=True)
-

@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>Swach India</title>
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     {% load static %}
 
     <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">
@@ -20,6 +20,44 @@
     </div>
     <div class="container">
 
+        <div class="row">
+        {% for i in issues %}
+                <div class="col-md-1"></div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row flex">
+                                <div class="col-2">
+                                    <img src="https://theinquisitive.in/logo.png" class="img-fluid">
+                                </div>
+                                <div class="col-10">
+                                    <span class="">Harsha</span><br>
+                                    Kakinada
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-img">
+                            <img src="{{i.image.url}}" class="img-thumbnail" alt="{{i.caption}}">
+                        </div>
+                        <div class="card-footer">
+                            <p class="caption">{{i.caption}}</p>
+                            <button class="btn btn-outline-primary">Vote 👍</button>
+                            {{i.votes}} Votes
+                            <br><br>
+                            <input type="text" placeholder="Add a Message" name="message">
+                            <button class="btn btn-secondary">Post</button>
+                            <br>
+                            <div class="comments">
+                                <b>Harsha</b> Very nice <br>
+                                <b>Vamsi</b> Awesome <br>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+        {% endfor %}
+            </div>
     </div>
 </body>
 </html>
