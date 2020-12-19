@@ -9,9 +9,33 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     {% load static %}
-
     <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">
-
+    <script>
+        function addvote(issue_id){
+            // alert(issue_id);
+            var el = document.getElementsByName("csrfmiddlewaretoken");
+            csrf_value = el[0].getAttribute("value");
+            $.ajax({
+                type: 'post',
+               url: "{% url 'user:addvote' %}",
+               data: {issue_id: issue_id, csrfmiddlewaretoken: csrf_value},
+               success: function (response) {
+//                    alert(response);
+                    var count_votes=parseInt(document.getElementById('count_votes'+issue_id).innerHTML);
+                    if(response=="0"){
+                        document.getElementById('count_votes'+issue_id).innerHTML=count_votes+1+"";
+                        document.getElementById('button'+issue_id).classList.add('btn-primary');
+                        document.getElementById('button'+issue_id).classList.remove('btn-outline-primary');
+                    }
+                    else{
+                        document.getElementById('count_votes'+issue_id).innerHTML=count_votes-1+"";
+                        document.getElementById('button'+issue_id).classList.remove('btn-primary');
+                        document.getElementById('button'+issue_id).classList.add('btn-outline-primary');
+                    }
+               }
+            });
+        }
+    </script>
 </head>
 <body>
     <div class="row header">
@@ -25,14 +49,15 @@
                 <div class="col-md-1"></div>
                 <div class="col-md-4">
                     <div class="card">
+                        {% csrf_token %}
                         <div class="card-header">
                             <div class="row flex">
                                 <div class="col-2">
                                     <img src="https://theinquisitive.in/logo.png" class="img-fluid">
                                 </div>
                                 <div class="col-10">
-                                    <span class="">Harsha</span><br>
-                                    Kakinada
+                                    <span class="name">{{i.user.name}}</span><br>
+                                    <span class="location">{{i.location}}</span>
                                 </div>
                             </div>
                         </div>
@@ -41,18 +66,38 @@
                         </div>
                         <div class="card-footer">
                             <p class="caption">{{i.caption}}</p>
-                            <button class="btn btn-outline-primary">Vote 👍</button>
-                            {{i.votes}} Votes
+                            <script>
+                                var votes={{votes|safe}};
+                                var id={{id}};
+                                var issue_id={{i.id}};
+                                var k=0;
+                                for(var a=0;a<votes.length;a++){
+                                    if(votes[a][0]==id && votes[a][1]==issue_id){
+                                        document.write(`
+                                            <button class="btn btn-primary" id="button{{i.id}}"  onclick=addvote({{i.id}})>Vote 👍</button>
+                                           `);
+                                        k=1;
+                                    }
+                                }
+                                if(k==0)
+                                    document.write(`
+                                        <button class="btn btn-outline-primary" id="button{{i.id}}" onclick=addvote({{i.id}})>Vote 👍</button>
+                                       `);
+                            </script>
+                            <span class="votes" id="count_votes{{i.id}}">{{i.votes}}</span> Votes
                             <br><br>
+                            <input type="hidden" name="csrfmiddlewaretoken" value="ckhUdNOTj88A...hfTnREALlks2kz">
                             <input type="text" placeholder="Add a Message" name="message">
                             <button class="btn btn-secondary">Post</button>
                             <br>
                             <div class="comments">
-                                <b>Harsha</b> Very nice <br>
-                                <b>Vamsi</b> Awesome <br>
+                                {% for j in messages %}
+                                    {% if j.issue_id.id == i.id %}
+                                        <b>{{j.user_id.name}}</b> {{j.message}} <br>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="col-md-1"></div>

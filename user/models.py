@@ -37,3 +37,4 @@ class Message(models.Model):
     user_id=models.ForeignKey(User,on_delete=models.CASCADE)
     issue_id=models.ForeignKey(Issue,on_delete=models.CASCADE)
     time=models.DateTimeField(auto_now_add=True)
+

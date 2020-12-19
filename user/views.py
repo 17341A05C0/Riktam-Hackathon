@@ -1,17 +1,20 @@
 from django.http import HttpResponse
 from django.shortcuts import  render,redirect
-from .models import User, Issue
+from .models import User, Issue, Message, Vote
 from django.contrib.auth.hashers import make_password, check_password
 import json
 import crypt
 
 def index(request):
-    if request.session.get('Name'):
+    if request.session.get('Id'):
         name=request.session['Name']
+        user_id=request.session['Id']
         issues=Issue.objects.all()
+        messages=Message.objects.all()
+        votes=Vote.objects.all()
+        votes_user=list(map(lambda x:(x.user_id.id,x.issue_id.id),votes))
 
-        return render(request,'index.html',{"name":name,"issues":issues})
-
+        return render(request,'index.html',{"name":name,"issues":issues,"messages":messages,"votes":json.dumps(votes_user),"id":user_id})
     return redirect('user:login')
 
 def login(request):
@@ -28,11 +31,12 @@ def login(request):
         mail=request.POST['email']
         password=request.POST['password']
         a=User.objects.all()
-        a=list(map(lambda x:(x.mail,x.password,x.name),a))
+        a=list(map(lambda x:(x.mail,x.password,x.name,x.id),a))
         for i in a:
             if i[0]==mail:
                 if check_password(password,i[1]):
                     request.session['Name']=i[2]
+                    request.session['Id']=i[3]
                     return redirect('user:index')
         return render(request,'login.html',{"error":"Incorrect Details","mail":mail,"list":mails})
 
@@ -58,3 +62,20 @@ def signup(request):
     return render(request,'signup.html',{"list":a})
 
 
+def addvote(request):
+    issue_id=request.POST['issue_id']
+    user_id=request.session['Id']
+    check=Vote.objects.filter(user_id=user_id,issue_id=issue_id)
+    # return HttpResponse(len(check))
+    x = Issue.objects.filter(id=issue_id)[0]
+    l=len(check)
+    if len(check)==0:
+        x.votes+=1
+        x.save()
+        v=Vote(user_id=User.objects.get(pk=user_id),issue_id=Issue.objects.get(pk=issue_id))
+        v.save()
+    else:
+        x.votes-=1
+        x.save()
+        check.delete()
+    return HttpResponse(l)
