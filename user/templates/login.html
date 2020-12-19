@@ -11,9 +11,57 @@
     {% load static %}
 
     <link rel="stylesheet" type="text/css" href="{% static 'login.css' %}">
+    <script>
+        function capitalize(string) {
+         return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+        var flag2=0;
+        function checkEmail(id){
+            var data=document.getElementById(id).value.trim();
+            mail=new RegExp("[a-zA-Z0-9]@[a-z]{3,}\.[a-z]{2,}","g");
+
+            if(data.length==0){
+                document.getElementById('err_'+id).innerHTML=capitalize(id)+" cannot be NULL";
+                document.getElementById(id).classList.add('error');
+                flag2=1;
+            }
+            else if(!data.match(mail)){
+                document.getElementById(id).classList.add('error');
+                document.getElementById('err_'+id).innerHTML="Enter a valid "+capitalize(id);
+                 flag2=1;
+            }
+            else{
+                document.getElementById('err_'+id).innerHTML="";
+                document.getElementById(id).classList.remove('error');
+                flag2=0;
+            }
+            if(flag2==0){
+                var list = {{list|safe}};
+                if(!list.includes(data)){
+                    document.getElementById(id).classList.add('error');
+                    document.getElementById('err_'+id).innerHTML="User Not Registered!";
+                     flag2=1;
+                }
+                else{
+                    document.getElementById('err_'+id).innerHTML="";
+                    document.getElementById(id).classList.remove('error');
+                    flag2=0;
+                }
+            }
+            checkbtn();
+        }
+        function checkbtn(){
+            if(flag2==0)
+                document.getElementById('submit').disabled=false;
+            else
+                document.getElementById('submit').disabled=true;
+
+        }
+    </script>
 </head>
 <body>
     <div class="form-bg">
+
         <br>
         <br>
         <br><br>
@@ -25,17 +73,20 @@
                             <i class="fa fa-user-secret fa-lg"></i>
                         </div>
                         <h3 class="title">User Login</h3>
-                        <form class="form-horizontal">
+                        <form class="form-horizontal" action="{% url 'user:login' %}" method="post">
+                            {% csrf_token %}
                             <div class="form-group">
                                 <span class="input-icon"><i class="fa fa-user"></i></span>
-                                <input class="form-control" type="email" placeholder="Email ID">
+                                <input class="form-control" type="email" placeholder="Email ID" name="email" id="email" oninput=checkEmail('email') value="{{mail}}">
                             </div>
+                            <span class="err_msg" id="err_email"></span>
                             <div class="form-group">
                                 <span class="input-icon"><i class="fa fa-lock"></i></span>
-                                <input class="form-control" type="password" placeholder="Password">
+                                <input class="form-control" type="password" placeholder="Password" name="password" id="password">
                             </div>
+                            <span class="err_msg" id="err_pass">{{error}}</span>
 <!--                            <span class="forgot-pass"><a href="#">Forgot Password ?</a></span>-->
-                            <button class="btn signin">Login</button>
+                            <button class="btn signin" id="submit" disabled>Login</button>
                         </form>
                         <span class="user-signup">Don't Have an Account? <a href="{% url 'user:signup' %}">Create Now !</a></span>
                     </div>
@@ -43,5 +94,10 @@
             </div>
         </div>
     </div>
+        <script>
+        setTimeout(function(){
+            checkEmail('email');
+        },1000);
+        </script>
 </body>
 </html>

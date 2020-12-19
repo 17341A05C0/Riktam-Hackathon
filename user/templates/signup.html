@@ -160,6 +160,19 @@
                 document.getElementById(id).classList.remove('error');
                 flag2=0;
             }
+            if(flag2==0){
+                var list = {{list|safe}};
+                if(list.includes(data)){
+                    document.getElementById(id).classList.add('error');
+                    document.getElementById('err_'+id).innerHTML="Mail Already exists !"
+                     flag2=1;
+                }
+                else{
+                    document.getElementById('err_'+id).innerHTML="";
+                    document.getElementById(id).classList.remove('error');
+                    flag2=0;
+                }
+            }
             checkbtn();
         }
         var flag3=1;
@@ -203,6 +216,7 @@
             sweetAlert("Some Error Occured", "", "error");
         </script>
     {% endif %}
+
 
     <div class="form-bg">
         <br><br>

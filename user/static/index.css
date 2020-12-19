@@ -1,0 +1,24 @@
+@import url(https://fonts.googleapis.com/css?family=Ubuntu);
+
+.header{
+  position: sticky;
+
+  top: 0;
+  z-index: 1;
+  padding: 20px;
+  background-color: #ddd;
+  border-bottom: 1px solid lightgray;
+  margin-bottom: 10px;
+}
+
+#center {
+    text-align: center;
+    font-family:Ubuntu;
+    font-size:35px;
+    color:#2F80ED;
+}
+
+#right {
+    float: right;
+    text-align: right;
+}
