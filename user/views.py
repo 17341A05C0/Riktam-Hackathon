@@ -79,3 +79,14 @@ def addvote(request):
         x.save()
         check.delete()
     return HttpResponse(l)
+
+def addmessage(request):
+    issue_id=request.POST['issue_id']
+    user_id=request.session['Id']
+    msg=request.POST['msg']
+    try:
+        m=Message(message=msg,user_id=User.objects.get(pk=user_id),issue_id=Issue.objects.get(pk=issue_id))
+        m.save()
+        return HttpResponse("True")
+    except:
+        return HttpResponse("False")

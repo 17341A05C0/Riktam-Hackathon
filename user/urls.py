@@ -10,7 +10,8 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('login/', views.login, name='login'),
     path('signup/', views.signup, name='signup'),
-    path('addvote/',views.addvote,name='addvote')
+    path('addvote/',views.addvote,name='addvote'),
+    path('addmessage/',views.addmessage,name='addmessage')
 ]
 
 urlpatterns += staticfiles_urlpatterns()
