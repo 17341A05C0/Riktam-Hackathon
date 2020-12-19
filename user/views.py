@@ -10,4 +10,4 @@ def login(request):
     return render(request,'login.html')
 
 def signup(request):
-    return HttpResponse('signup')
+    return render(request,'signup.html')

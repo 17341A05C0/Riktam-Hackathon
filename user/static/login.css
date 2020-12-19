@@ -1,14 +1,21 @@
+* {
+    font-family:Ubuntu;
+}
+
 .container{
     padding:20px;
 }
+
 .form-container{
     background-color: #fff;
-    font-family: 'Titillium Web', sans-serif;
+    vertical-align:center;
     padding: 25px 10px;
     overflow: hidden;
     position: relative;
     z-index: 1;
+    border-bottom:1px solid black;
 }
+
 .form-container:before{
     content: '';
     background: radial-gradient(at 50% 25%,#1093ea 0%, #007bb7 100%);
@@ -78,6 +85,7 @@
 .form-horizontal .form-control:focus{
     box-shadow: none;
     border: none;
+    border-bottom:1px solid black;
 }
 .form-horizontal .form-control::placeholder{
     color: #999;

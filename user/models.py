@@ -1,3 +1,8 @@
 from django.db import models
 
-# Create your models here.
+
+class User(models.Model):
+    mail=models.EmailField(unique=True,max_length=200)
+    password=models.TextField(max_length=20)
+    photo=models.ImageField(upload_to ='data/')
+    time=models.DateTimeField(auto_now_add=True)
