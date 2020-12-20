@@ -85,8 +85,10 @@ function getCoordintes() {
 		var lat = crd.latitude.toString();
 		var lng = crd.longitude.toString();
 		var coordinates = [lat, lng];
+
 		console.log(`Latitude: ${lat}, Longitude: ${lng}`);
-		getCity(coordinates);
+		document.getElementById('lat').value=lat;
+		document.getElementById('long').value=lng;
 		return;
 
 	}
@@ -98,28 +100,6 @@ function getCoordintes() {
 	navigator.geolocation.getCurrentPosition(success, error, options);
 }
 
-// Step 2: Get city name
-function getCity(coordinates) {
-	var xhr = new XMLHttpRequest();
-	var lat = coordinates[0];
-	var lng = coordinates[1];
-
-	// Paste your LocationIQ token below.
-	xhr.open('GET', "https://us1.locationiq.com/v1/reverse.php?key=YOUR_PRIVATE_TOKEN&lat=" +
-	lat + "&lon=" + lng + "&format=json", true);
-	xhr.send();
-	xhr.onreadystatechange = processRequest;
-	xhr.addEventListener("readystatechange", processRequest, false);
-
-	function processRequest(e) {
-		if (xhr.readyState == 4 && xhr.status == 200) {
-			var response = JSON.parse(xhr.responseText);
-			var city = response.address.city;
-			console.log(city);
-			return;
-		}
-	}
-}
 
 getCoordintes();
 
@@ -135,6 +115,8 @@ getCoordintes();
                 <form class="form-horizontal" action="{% url 'user:index' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <input type="text" name="caption" placeholder="Enter a caption">
+                    <input type="hidden" name="lat" id="lat" >
+                    <input type="hidden" name="long" id="long">
                     {{ form.as_p }}
                     <button type="submit" class="btn btn-info">Post</button>
                 </form>

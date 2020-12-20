@@ -7,6 +7,26 @@ import crypt
 from .forms import IssueForm
 # from django.contrib.gis.utils import GeoIP
 
+# import module
+from geopy.geocoders import Nominatim
+
+
+
+def getLocation(Latitude,Longitude):
+    geolocator = Nominatim(user_agent="geoapiExercises")
+
+    # Latitude & Longitude input
+    # Latitude = "16.945529999999998"
+    # Longitude = "82.2381173"
+
+    location = geolocator.reverse(Latitude + "," + Longitude)
+
+    address = location.raw['address']
+
+    city = address.get('city', 'Hyderabad')
+    state = address.get('state', 'Telangana')
+    return city+", "+state
+
 def index(request):
     if request.method == "POST":
         try:
@@ -15,12 +35,11 @@ def index(request):
                 img = form.cleaned_data.get("image_field")
                 caption=request.POST['caption']
                 id=request.session['Id']
-                # g = GeoIP()
-                # ip = request.META.get('REMOTE_ADDR', None)
-                # if ip:
-                #     city = g.city(ip)['city']
-                # else:
-                #     city='Hyderabad'
+                lat=request.POST['lat']
+                long=request.POST['long']
+                # return HttpResponse(lat+" "+long)
+                city=getLocation(lat,long)
+
                 i=Issue(user=User.objects.get(pk=id),caption=caption,location=city,image=img)
                 i.save()
                 return HttpResponse('success')
