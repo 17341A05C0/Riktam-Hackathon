@@ -4,9 +4,30 @@ from .models import User, Issue, Message, Vote
 from django.contrib.auth.hashers import make_password, check_password
 import json
 import crypt
+from .forms import IssueForm
+# from django.contrib.gis.utils import GeoIP
 
 def index(request):
-    if request.session.get('Id'):
+    if request.method == "POST":
+        try:
+            form = IssueForm(request.POST, request.FILES)
+            if form.is_valid():
+                img = form.cleaned_data.get("image_field")
+                caption=request.POST['caption']
+                id=request.session['Id']
+                # g = GeoIP()
+                # ip = request.META.get('REMOTE_ADDR', None)
+                # if ip:
+                #     city = g.city(ip)['city']
+                # else:
+                #     city='Hyderabad'
+                i=Issue(user=User.objects.get(pk=id),caption=caption,location=city,image=img)
+                i.save()
+                return HttpResponse('success')
+        except Exception as e:
+            return HttpResponse(e)
+
+    elif request.session.get('Id'):
         name=request.session['Name']
         user_id=request.session['Id']
         issues=Issue.objects.all()
@@ -14,7 +35,8 @@ def index(request):
         votes=Vote.objects.all()
         votes_user=list(map(lambda x:(x.user_id.id,x.issue_id.id),votes))
 
-        return render(request,'index.html',{"name":name,"issues":issues,"messages":messages,"votes":json.dumps(votes_user),"id":user_id})
+        return render(request,'index.html',{"name":name,"issues":issues,"messages":messages,
+                                            "votes":json.dumps(votes_user),"id":user_id,"form":IssueForm()})
     return redirect('user:login')
 
 def login(request):
