@@ -132,12 +132,42 @@ def addmessage(request):
     except:
         return HttpResponse("False")
 
+def editTitle(request):
+    try:
+        issue_id=request.POST['issue_id']
+        # return HttpResponse(request.POST.items())
+        caption=request.POST['caption']
+        # return HttpResponse(caption+'hi')
+        i=Issue.objects.get(pk=issue_id)
+        i.caption=caption
+        i.save()
+        return HttpResponse("True")
+    except Exception as e:
+        return HttpResponse(e)
+
+def deleteIssue(request):
+    try:
+        issue_id = request.POST['issue_id']
+        i=Issue.objects.get(pk=issue_id)
+        i.delete()
+        return HttpResponse("True")
+    except:
+        return HttpResponse("False")
+
+def deleteMessage(request):
+    try:
+        message_id = request.POST['message_id']
+        m=Message.objects.get(pk=message_id)
+        m.delete()
+        return HttpResponse("True")
+    except:
+        return HttpResponse("False")
 
 def profile(request):
     if request.session.get('Id'):
         name=request.session['Name']
         user_id=request.session['Id']
-        issues=Issue.objects.all()
+        issues=Issue.objects.filter(user=User.objects.get(pk=user_id))
         messages=Message.objects.all()
         votes=Vote.objects.all()
         votes_user=list(map(lambda x:(x.user_id.id,x.issue_id.id),votes))

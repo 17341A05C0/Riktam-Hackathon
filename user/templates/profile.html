@@ -107,6 +107,77 @@
                         }
                     }
                 }
+                function edit(id){
+                    // alert(id);
+                    var check=document.getElementById('caption_edit'+id).type;
+                    if(check=="hidden"){
+                        document.getElementById('caption_edit'+id).type="text";
+                        document.getElementById('caption'+id).style.display="none";
+                        x=document.getElementsByName('delete_comment'+id);
+                        //alert(x.length);
+                        for(var i=0;i<x.length;i++){
+                            x[i].style.display="block";
+                        }
+                    }
+                    else{
+                        document.getElementById('caption_edit'+id).type="hidden";
+                        document.getElementById('caption'+id).style.display="block";
+                        x=document.getElementsByName('delete_comment'+id);
+                        //alert(x.length);
+                        for(var i=0;i<x.length;i++){
+                            x[i].style.display="none";
+                        }                    }
+                }
+                function editTitle(id){
+                    var caption=document.getElementById('caption_edit'+id).value;
+                   // alert(msg);
+                    var issue_id=id;
+                    var el = document.getElementsByName("csrfmiddlewaretoken");
+                    csrf_value = el[0].getAttribute("value");
+                    $.ajax({
+                        type: 'post',
+                       url: "{% url 'user:editTitle' %}",
+                       data: {issue_id: issue_id,caption: caption, csrfmiddlewaretoken: csrf_value},
+                       success: function (response) {
+                            if(response=="True"){
+                                document.getElementById('caption'+id).innerHTML=caption;
+                                edit(id);
+                            }
+                       }
+                    });
+                }
+                function deleteIssue(id){
+                    var issue_id=id;
+                    var el = document.getElementsByName("csrfmiddlewaretoken");
+                    csrf_value = el[0].getAttribute("value");
+                    $.ajax({
+                        type: 'post',
+                       url: "{% url 'user:deleteIssue' %}",
+                       data: {issue_id: issue_id, csrfmiddlewaretoken: csrf_value},
+                       success: function (response) {
+                            if(response=="True"){
+                                window.location.reload();
+                            }
+                       }
+                    });
+                }
+                function deleteMessage(id){
+                alert(id);
+                    var message_id=id;
+                    var el = document.getElementsByName("csrfmiddlewaretoken");
+                    csrf_value = el[0].getAttribute("value");
+                    $.ajax({
+                        type: 'post',
+                       url: "{% url 'user:deleteMessage' %}",
+                       data: {message_id: message_id, csrfmiddlewaretoken: csrf_value},
+                       success: function (response) {
+                       alert(response);
+                            if(response=="True"){
+                                window.location.reload();
+                            }
+                       }
+                    });
+                }
             </script>
 
         <br>
@@ -124,8 +195,8 @@
                             </ul>
                             <!-- menu -->
                             <div id="myDropdown{{i.id}}" class="dropdown-content">
-                                <a href="#home">Edit</a>
-                                <a href="#about">Delete</a>
+                                <a href="#" onclick=edit({{i.id}})>Edit</a>
+                                <a href="#" onclick="deleteIssue({{i.id}})">Delete</a>
                             </div>
                         </div>
                         {% csrf_token %}
@@ -147,7 +218,10 @@
                             <img src="{{i.image.url}}" class="img-thumbnail" alt="{{i.caption}}">
                         </div>
                         <div class="card-footer">
-                            <p class="caption">{{i.caption}}</p>
+                            <p class="caption" id="caption{{i.id}}">{{i.caption}}</p>
+                            <input type="hidden" id="caption_edit{{i.id}}"
+                                   name="caption_edit{{i.id}}" value="{{i.caption}}"
+                                    onchange=editTitle({{i.id}}) >
                             <script>
                                 var votes={{votes|safe}};
                                 var id={{id}};
@@ -164,7 +238,7 @@
                                 if(k==0)
                                     document.write(`
                                         <button class="btn btn-outline-primary" id="button{{i.id}}" onclick=addvote({{i.id}})>Vote 👍</button>
-                                       `);
+                                   `);
                             </script>
                             <span class="votes" id="count_votes{{i.id}}">{{i.votes}}</span> Votes
                             <br><br>
@@ -176,7 +250,11 @@
                             <div class="messages" id="messages{{i.id}}">
                                 {% for j in messages %}
                                     {% if j.issue_id.id == i.id %}
-                                        <b>{{j.user_id.name}}</b> {{j.message}} <br>
+                                    <div class="row">
+                                            <b class="comment_name">{{j.user_id.name}}</b>
+                                        <span class="comment"> {{j.message}} </span>
+                                            <a style="display:none;" name="delete_comment{{i.id}}"  href="#" onclick="deleteMessage({{j.id}})">delete</a>
+                                    </div>
                                     {% endif %}
                                 {% endfor %}
                             </div>
