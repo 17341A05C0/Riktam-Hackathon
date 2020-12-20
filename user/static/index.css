@@ -1,28 +1,134 @@
-@import url(https://fonts.googleapis.com/css?family=Ubuntu);
+        @import url(https://fonts.googleapis.com/css?family=Ubuntu);
 
-.header{
-  position: sticky;
+        .header{
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          padding: 20px;
+          height:100px;
+          background-color: #cdcdcd;
+          border-bottom: 1px solid lightgray;
+          margin-bottom: 10px;
+        }
 
-  top: 0;
-  z-index: 1;
-  padding: 20px;
-  background-color: #bbb;
-  border-bottom: 1px solid lightgray;
-  margin-bottom: 10px;
-}
 
-#center {
-    text-align: center;
-    font-family:Ubuntu;
-    font-size:35px;
-    color:#2F80ED;
-}
+        .same-line div{
+            display: inline-block;
+            position: absolute;
+        }
+        .on-the-left{
+            left:4%;
+            font-family:Marker Felt, fantasy;
+        }
+        .on-the-center{
+            left: 0%;
+            right: 0%;
+            text-align: center;
+        }
+        .on-the-right{
+            right: 3%;
+            font-size:28px;
+            padding-top:5px;
+            font-family:ArialBlack;
+        }
+        .on-the-right a{
+            border-bottom:1px solid blue;
+        }
+        .card{
+            margin:5px;
+        }
+        .img_logo{
+            max-height:50px;
+            padding-right:35px;
+        }
 
-#right {
-    float: right;
-    text-align: right;
-}
+       .post__commentBox {
+            display: flex;
+            margin: 5px;
+            margin-top: 10px;
+          }
 
-.card{
-    margin:5px;
-}
+          .post__input {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            border-top: 1px solid lightgray;
+            margin-right:5px;
+          }
+
+          .post__input {
+            /* padding: 10px;
+            text-align: left;
+            font-weight: normal; */
+
+            width: 100%;
+            padding: 12px 20px;
+
+            /* margin: 8px 0;
+            margin-top:15px;*/
+            box-sizing: border-box;
+            border: 3px solid #ccc;
+            -webkit-transition: 0.5s;
+            transition: 0.5s;
+            outline: none;
+          }
+
+          .post__input:focus {
+            border: 3px solid #555;
+          }
+
+          .post__button {
+            border: none;
+            border-top: 1px solid lightgray;
+            color: white;
+            background-color: blue;
+            flex: 0;
+          }
+          .card{
+              margin:10px;
+              margin-bottom:30px;
+              border:0.5px solid black;
+              box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.2);
+              border-radius:10px;
+           }
+           .card:hover{
+                box-shadow: 4px 6px 6px 0 rgba(3, 3, 3, 0.3)
+            }
+           .card_header{
+                padding:15px;
+                border-bottom:2px dashed black;
+                  background-color:#eee;
+              border-radius:20px;
+              border-radius: 10px 10px 0px 0px;
+           }
+           .card-img{
+                padding:10px;
+                border:0px solid black;
+           }
+           .card-img img{
+                border-radius:10px;
+                border:1px solid black;
+                transition:0.3s;
+           }
+           .card-img img:hover{
+                transform:scale(1.05);
+                transition:0.3s;
+                border:1px solid black;
+           }
+           .name{
+                font-weight:800;
+                font-size:25px;
+                font-family:Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif ;
+           }
+           .location{
+                font-family:Courier, monospace;
+            }
+            .time{
+                float:right;
+                font-style:oblique;
+                font-family:Ubuntu;
+            }
+            .caption{
+                padding:3px;
+                font-size:18px;
+            }

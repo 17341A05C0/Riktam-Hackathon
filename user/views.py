@@ -49,10 +49,11 @@ def index(request):
     elif request.session.get('Id'):
         name=request.session['Name']
         user_id=request.session['Id']
-        issues=Issue.objects.all()
-        messages=Message.objects.all()
+        issues=Issue.objects.order_by('time')[::-1]
+        messages=Message.objects.all()[::-1]
         votes=Vote.objects.all()
         votes_user=list(map(lambda x:(x.user_id.id,x.issue_id.id),votes))
+
 
         return render(request,'index.html',{"name":name,"issues":issues,"messages":messages,
                                             "votes":json.dumps(votes_user),"id":user_id,"form":IssueForm()})

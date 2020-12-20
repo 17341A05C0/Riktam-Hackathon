@@ -57,8 +57,8 @@
                     if(response=="True"){
                         var x=document.getElementById('messages'+issue_id).innerHTML;
                       //  alert(x);
-                        x+=`
-                            <b>{{name}}</b> `+msg+`<br>`;
+                        x=`
+                            <b>{{name}}</b> `+msg+`<br>`+x;
                         document.getElementById('messages'+issue_id).innerHTML=x;
                         document.getElementById('message'+issue_id).value="";
                     }
@@ -69,6 +69,10 @@
             });
         }
     </script>
+
+    <style>
+
+    </style>
 </head>
 <body>
 <script>
@@ -104,10 +108,22 @@ function getCoordintes() {
 getCoordintes();
 
 </script>
-    <div class="row header">
-        <div id="center">SWACH INDIA</div>
-        <div id="right">{{name}}</div>
-    </div>
+    <div class="header same-line">
+        <div class="on-the-left" >
+                <img src="/media/data/swach bharat.png" class="img_logo">
+            <span style="font-size:35px;color:#112233;padding:10px;
+                border-bottom:2px dashed black;">
+                SWACHH BHARAT
+            </span>
+        </div>
+        <div class="on-the-center" >
+
+        </div>
+        <div class="on-the-right" >
+            Hii, <a href="{% url 'user:profile' %}"> {{name|title}} </a>
+            <button class="btn btn-info">LOGOUT</button>
+        </div>
+      </div>
     <div class="container">
         <div class="row">
             <div class="col-md-4"></div>
@@ -125,15 +141,16 @@ getCoordintes();
         <br>
         <br>
         <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-5">
         {% for i in issues %}
-                <div class="col-md-1"></div>
-                <div class="col-md-4">
                     <div class="card">
                         {% csrf_token %}
-                        <div class="card-header">
+                        <div class="card_header">
                             <div class="row flex">
                                 <div class="col-3">
-                                    <img src="https://st2.depositphotos.com/3369547/11372/v/950/depositphotos_113724550-stock-illustration-businessman-concept-avatar-male-person.jpg" class="img-fluid">
+                                    <img src="https://st2.depositphotos.com/3369547/11372/v/950/depositphotos_113724550-stock-illustration-businessman-concept-avatar-male-person.jpg"
+                                         class="img-fluid">
                                 </div>
                                 <div class="col-8">
                                     <span class="name">{{i.user.name|title}}</span><br>
@@ -141,15 +158,17 @@ getCoordintes();
                                 </div>
                             </div>
                             <div class="" >
-<!--                                <span class="location">{{i.location|title}}</span>-->
-                                <span id="right" >{{i.time}}</span>
+                                <span class="time" >{{i.time}}</span>
                             </div>
                         </div>
                         <div class="card-img">
-                            <img src="{{i.image.url}}" class="img-thumbnail" alt="{{i.caption}}">
+                            <img src="{{i.image.url}}" class="img-fluid" alt="{{i.caption}}">
                         </div>
                         <div class="card-footer">
-                            <p class="caption">{{i.caption}}</p>
+                            <p class="caption">
+                                <b>{{i.user.name}}</b>
+                                {{i.caption}}
+                            </p>
                             <script>
                                 var votes={{votes|safe}};
                                 var id={{id}};
@@ -171,8 +190,11 @@ getCoordintes();
                             <span class="votes" id="count_votes{{i.id}}">{{i.votes}}</span> Votes
                             <br><br>
                             <input type="hidden" name="csrfmiddlewaretoken" value="ckhUdNOTj88A...hfTnREALlks2kz">
-                            <input type="text" placeholder="Add a Message" id="message{{i.id}}" name="message">
-                            <button class="btn btn-secondary" onclick=addmessage({{i.id}})>Post</button>
+                            <div class="post__commentBox">
+
+                                <input type="text" placeholder="Add a Message" class="post__input input" id="message{{i.id}}" name="message">
+                                <button class="post__button" onclick=addmessage({{i.id}})>Post</button>
+                            </div>
                             <br>
                             <span id="errmsg{{i.id}}" style="color:red;"></span>
                             <div class="messages" id="messages{{i.id}}">
@@ -184,10 +206,10 @@ getCoordintes();
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-1"></div>
+
         {% endfor %}
             </div>
+        </div>
     </div>
 </body>
 </html>
