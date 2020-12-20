@@ -131,3 +131,17 @@ def addmessage(request):
         return HttpResponse("True")
     except:
         return HttpResponse("False")
+
+
+def profile(request):
+    if request.session.get('Id'):
+        name=request.session['Name']
+        user_id=request.session['Id']
+        issues=Issue.objects.all()
+        messages=Message.objects.all()
+        votes=Vote.objects.all()
+        votes_user=list(map(lambda x:(x.user_id.id,x.issue_id.id),votes))
+        return render(request,'profile.html',{"name":name,"issues":issues,"messages":messages,
+                                            "votes":json.dumps(votes_user),"id":user_id,"form":IssueForm()})
+    return redirect('user:login')
+

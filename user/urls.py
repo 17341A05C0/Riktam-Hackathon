@@ -11,7 +11,8 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('signup/', views.signup, name='signup'),
     path('addvote/',views.addvote,name='addvote'),
-    path('addmessage/',views.addmessage,name='addmessage')
+    path('addmessage/',views.addmessage,name='addmessage'),
+    path('profile/',views.profile,name="profile")
 ]
 
 urlpatterns += staticfiles_urlpatterns()
