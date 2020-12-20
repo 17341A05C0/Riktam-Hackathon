@@ -21,8 +21,9 @@ def getLocation(Latitude,Longitude):
     geolocator = Nominatim(user_agent="geoapiExercises")
 
     # Latitude & Longitude input
-    # Latitude = "16.945529999999998"
-    # Longitude = "82.2381173"
+    if Latitude=="" and Longitude=="":
+        Latitude = "16.945529999999998"
+        Longitude = "82.2381173"
 
     location = geolocator.reverse(Latitude + "," + Longitude)
 
@@ -62,7 +63,7 @@ def index(request):
 
                 i=Issue(user=User.objects.get(pk=id),caption=caption,location=city,image=img)
                 i.save()
-                return HttpResponse('success')
+                return redirect('user:index')
         except Exception as e:
             return HttpResponse(e)
 
