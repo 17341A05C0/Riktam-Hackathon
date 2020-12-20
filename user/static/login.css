@@ -2,9 +2,15 @@
     font-family:Ubuntu;
 }
 
+.form-bg{
+    height:100%;
+    background-color:#eee;
+}
+
 .container{
     padding:20px;
 }
+
 
 .form-container{
     background-color: #fff;

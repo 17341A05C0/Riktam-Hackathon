@@ -60,6 +60,8 @@ def index(request):
 
 def login(request):
 
+    if request.session.get('Id'):
+        return redirect('user:index')
     a=User.objects.all()
     # for i in a[1:]:
     #     return HttpResponse(i)
@@ -72,18 +74,26 @@ def login(request):
         mail=request.POST['email']
         password=request.POST['password']
         a=User.objects.all()
-        a=list(map(lambda x:(x.mail,x.password,x.name,x.id),a))
+        a=list(map(lambda x:(x.mail,x.password,x.name,x.id,x.is_admin),a))
         for i in a:
             if i[0]==mail:
                 if check_password(password,i[1]):
                     request.session['Name']=i[2]
                     request.session['Id']=i[3]
+                    if i[4]:
+                        request.session['admin']=True
+
+                        return redirect('user:admin')
                     return redirect('user:index')
         return render(request,'login.html',{"error":"Incorrect Details","mail":mail,"list":mails})
 
     return render(request,'login.html',{"list":a})
 
 def signup(request):
+
+    if request.session.get('Id'):
+        return redirect('user:index')
+
     if request.method=="POST":
         try:
             name=request.POST["name"].lower()
@@ -101,6 +111,34 @@ def signup(request):
     # return HttpResponse(a)
     a=json.dumps(a)
     return render(request,'signup.html',{"list":a})
+
+
+def profile(request):
+    if request.session.get('Id'):
+        name=request.session['Name']
+        user_id=request.session['Id']
+        issues=Issue.objects.filter(user=User.objects.get(pk=user_id))
+        messages=Message.objects.all()
+        votes=Vote.objects.all()
+        votes_user=list(map(lambda x:(x.user_id.id,x.issue_id.id),votes))
+        return render(request,'profile.html',{"name":name,"issues":issues,"messages":messages,
+                                            "votes":json.dumps(votes_user),"id":user_id,"form":IssueForm()})
+    return redirect('user:login')
+
+def admin(request):
+    if request.session.get('admin'):
+
+        name=request.session['Name']
+        user_id=request.session['Id']
+        issues=Issue.objects.all()
+        messages=Message.objects.all()
+
+        return render(request,'admin.html',{"name":name,"issues":issues,"messages":messages,
+                                            "id":user_id,"form":IssueForm()})
+
+    if request.session.get('id'):
+        return redirect('user:index')
+    return redirect('user:login')
 
 
 def addvote(request):
@@ -162,16 +200,3 @@ def deleteMessage(request):
         return HttpResponse("True")
     except:
         return HttpResponse("False")
-
-def profile(request):
-    if request.session.get('Id'):
-        name=request.session['Name']
-        user_id=request.session['Id']
-        issues=Issue.objects.filter(user=User.objects.get(pk=user_id))
-        messages=Message.objects.all()
-        votes=Vote.objects.all()
-        votes_user=list(map(lambda x:(x.user_id.id,x.issue_id.id),votes))
-        return render(request,'profile.html',{"name":name,"issues":issues,"messages":messages,
-                                            "votes":json.dumps(votes_user),"id":user_id,"form":IssueForm()})
-    return redirect('user:login')
-

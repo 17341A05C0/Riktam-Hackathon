@@ -132,15 +132,16 @@ getCoordintes();
                         {% csrf_token %}
                         <div class="card-header">
                             <div class="row flex">
-                                <div class="col-2">
-                                    <img src="https://theinquisitive.in/logo.png" class="img-fluid">
+                                <div class="col-3">
+                                    <img src="https://st2.depositphotos.com/3369547/11372/v/950/depositphotos_113724550-stock-illustration-businessman-concept-avatar-male-person.jpg" class="img-fluid">
                                 </div>
                                 <div class="col-8">
-                                    <span class="name">{{i.user.name}}</span><br>
+                                    <span class="name">{{i.user.name|title}}</span><br>
+                                    <span class="location">{{i.location|title}}</span>
                                 </div>
                             </div>
                             <div class="" >
-                                <span class="location">{{i.location}}</span>
+<!--                                <span class="location">{{i.location|title}}</span>-->
                                 <span id="right" >{{i.time}}</span>
                             </div>
                         </div>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Swach India</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">
+
+</head>
+<body>
+    <div class="row header">
+        <div id="center">SWACH INDIA</div>
+        <div id="right">{{name}}</div>
+    </div>
+    <div class="container">
+
+        <br>
+        <br>
+        <div class="row">
+        {% for i in issues %}
+                <div class="col-md-1"></div>
+                <div class="col-md-4">
+                    <div class="card">
+                        {% csrf_token %}
+                        <div class="card-header">
+                            <div class="row flex">
+                                <div class="col-3">
+                                    <img src="https://st2.depositphotos.com/3369547/11372/v/950/depositphotos_113724550-stock-illustration-businessman-concept-avatar-male-person.jpg" class="img-fluid">
+                                </div>
+                                <div class="col-8">
+                                    <span class="name">{{i.user.name|title}}</span><br>
+                                    <span class="location">{{i.location|title}}</span>
+                                </div>
+                            </div>
+                            <div class="" >
+<!--                                <span class="location">{{i.location|title}}</span>-->
+                                <span id="right" >{{i.time}}</span>
+                            </div>
+                        </div>
+                        <div class="card-img">
+                            <img src="{{i.image.url}}" class="img-thumbnail" alt="{{i.caption}}">
+                        </div>
+                        <div class="card-footer">
+                            <p class="caption">{{i.caption}}</p>
+                            <span class="status">{{i.status}}</span>
+
+                            <span class="votes" id="count_votes{{i.id}}">{{i.votes}}</span> Votes
+                            <br><br>
+                            <input type="hidden" name="csrfmiddlewaretoken" value="ckhUdNOTj88A...hfTnREALlks2kz">
+
+                            <br>
+                            <span id="errmsg{{i.id}}" style="color:red;"></span>
+                            <div class="messages" id="messages{{i.id}}">
+                                {% for j in messages %}
+                                    {% if j.issue_id.id == i.id %}
+                                        <b>{{j.user_id.name}}</b> {{j.message}} <br>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+        {% endfor %}
+            </div>
+    </div>
+</body>
+</html>

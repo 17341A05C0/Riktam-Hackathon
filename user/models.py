@@ -6,6 +6,7 @@ class User(models.Model):
     mail=models.EmailField(unique=True,max_length=200)
     password=models.TextField(max_length=1000)
     photo=models.ImageField(upload_to ='data/')
+    is_admin=models.BooleanField(default=False)
     time=models.DateTimeField(auto_now_add=True)
 
 class Issue(models.Model):
