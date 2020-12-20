@@ -16,7 +16,8 @@ urlpatterns = [
     path('editTitle',views.editTitle,name="editTitle"),
     path('deleteIssue',views.deleteIssue,name="deleteIssue"),
     path('deleteMessage',views.deleteMessage,name="deleteMessage"),
-    path('admin',views.admin,name="admin")
+    path('admin',views.admin,name="admin"),
+    path('logout',views.logout,name="logout")
 ]
 
 urlpatterns += staticfiles_urlpatterns()

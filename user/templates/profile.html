@@ -91,7 +91,7 @@
         </div>
         <div class="on-the-right" >
             Hii, <a href="{% url 'user:profile' %}"> {{name|title}} </a>
-            <button class="btn btn-info">LOGOUT</button>
+            <a href="{% url 'user:logout' %}"> <button class="btn btn-info" >LOGOUT</button> </a>
         </div>
       </div>
 
@@ -283,6 +283,39 @@
                     </div>
         {% endfor %}
                 </div>
+
+            <div class="col-md-1"></div>
+            <div class="col-md-5">
+                <div class="card" style="position:fixed;">
+                    <div class="card-header bg-primary text-white">
+                        <div class="card-title">
+                            Recent Activity
+                        </div>
+                    </div>
+                    <div class="card-body" style="max-height:450px;">
+                        <table class="table table-striped table-hover table-bordered" >
+                            <tbody style="max-height:350;overflow-y:scroll;">
+                                <script>
+                                    var recent={{recent|safe}};
+                                    for(var i=0;i<recent.length;i++){
+                                        document.write(`
+                                            <tr>
+                                                <td>
+
+                                                    <img src="https://st2.depositphotos.com/3369547/11372/v/950/depositphotos_113724550-stock-illustration-businessman-concept-avatar-male-person.jpg"
+                                                       height=30 width=20>
+                                                   `+
+                                                    recent[i][0]+recent[i][2]+recent[i][1]
+                                                +`</td>
+                                            </tr>
+                                        `);
+                                    }
+                                </script>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
             </div>
     </div>
 </body>

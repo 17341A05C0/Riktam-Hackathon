@@ -10,7 +10,12 @@ from .forms import IssueForm
 # import module
 from geopy.geocoders import Nominatim
 
-
+Choices = (
+    (1, 'Submitted to the newspaper'),
+    (2, 'resolved'),
+    (3, 'no action taken'),
+    (4, 'open')
+)
 
 def getLocation(Latitude,Longitude):
     geolocator = Nominatim(user_agent="geoapiExercises")
@@ -26,6 +31,21 @@ def getLocation(Latitude,Longitude):
     city = address.get('city', 'Hyderabad')
     state = address.get('state', 'Telangana')
     return city+", "+state
+
+def getRecent():
+    issues=Issue.objects.order_by('time')[::-1]
+    messages=Message.objects.order_by('time')[::-1]
+
+    l=[]
+    for i in issues:
+        l+=[(i.user.name.title(),"<b> "+i.caption+" </b>"," Posted a new Issue named ",i.time)]
+    for i in messages:
+        l+=[(i.user_id.name.title(),"<b> "+i.message+" </b>", " Messaged on "+i.issue_id.user.name.title()+"'s Issue as ",i.time)]
+    l.sort(key=lambda x:x[-1],reverse=True)
+    l=list(map(lambda x:x[:-1],l))
+    l=l[:100]
+    l=json.dumps(l)
+    return l
 
 def index(request):
     if request.method == "POST":
@@ -52,12 +72,25 @@ def index(request):
         issues=Issue.objects.order_by('time')[::-1]
         messages=Message.objects.all()[::-1]
         votes=Vote.objects.all()
+
+        recent=getRecent()
+
         votes_user=list(map(lambda x:(x.user_id.id,x.issue_id.id),votes))
 
 
         return render(request,'index.html',{"name":name,"issues":issues,"messages":messages,
-                                            "votes":json.dumps(votes_user),"id":user_id,"form":IssueForm()})
+                                        "recent":recent,"votes":json.dumps(votes_user),"id":user_id,"form":IssueForm()})
     return redirect('user:login')
+
+def logout(request):
+    if request.session.get('Id'):
+        del request.session['Id']
+        del request.session['Name']
+        try:
+            del request.session['admin']
+        except:
+            pass
+        return redirect('user:login')
 
 def login(request):
 
@@ -122,8 +155,11 @@ def profile(request):
         messages=Message.objects.all()
         votes=Vote.objects.all()
         votes_user=list(map(lambda x:(x.user_id.id,x.issue_id.id),votes))
+
+        recent=getRecent()
+
         return render(request,'profile.html',{"name":name,"issues":issues,"messages":messages,
-                                            "votes":json.dumps(votes_user),"id":user_id,"form":IssueForm()})
+                                           "recent":recent,"votes":json.dumps(votes_user),"id":user_id,"form":IssueForm()})
     return redirect('user:login')
 
 def admin(request):
@@ -133,6 +169,8 @@ def admin(request):
         user_id=request.session['Id']
         issues=Issue.objects.all()
         messages=Message.objects.all()
+
+        choices=list(map(lambda x: Choices(int(x.status)-1),issues))
 
         return render(request,'admin.html',{"name":name,"issues":issues,"messages":messages,
                                             "id":user_id,"form":IssueForm()})
@@ -158,6 +196,11 @@ def addvote(request):
         x.votes-=1
         x.save()
         check.delete()
+
+    if x.votes >= 100:
+        x.status = 1
+    else:
+        x.status = 4
     return HttpResponse(l)
 
 def addmessage(request):

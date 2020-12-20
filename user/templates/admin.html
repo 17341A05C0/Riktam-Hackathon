@@ -13,24 +13,37 @@
 
 </head>
 <body>
-    <div class="row header">
-        <div id="center">SWACH INDIA</div>
-        <div id="right">{{name}}</div>
-    </div>
+    <div class="header same-line">
+        <div class="on-the-left" >
+                <img src="/media/data/swach bharat.png" class="img_logo">
+            <span style="font-size:35px;color:#112233;padding:10px;
+                border-bottom:2px dashed black;">
+                SWACHH BHARAT
+            </span>
+        </div>
+        <div class="on-the-center" >
+
+        </div>
+        <div class="on-the-right" >
+            Hii, <a href="{% url 'user:profile' %}"> {{name|title}} </a>
+            <a href="{% url 'user:logout' %}"> <button class="btn btn-info" >LOGOUT</button> </a>
+        </div>
+      </div>
     <div class="container">
 
         <br>
         <br>
         <div class="row">
-        {% for i in issues %}
                 <div class="col-md-1"></div>
-                <div class="col-md-4">
+                <div class="col-md-5">
+        {% for i in issues %}
                     <div class="card">
                         {% csrf_token %}
-                        <div class="card-header">
+                        <div class="card_header">
                             <div class="row flex">
                                 <div class="col-3">
-                                    <img src="https://st2.depositphotos.com/3369547/11372/v/950/depositphotos_113724550-stock-illustration-businessman-concept-avatar-male-person.jpg" class="img-fluid">
+                                    <img src="https://st2.depositphotos.com/3369547/11372/v/950/depositphotos_113724550-stock-illustration-businessman-concept-avatar-male-person.jpg"
+                                         class="img-fluid">
                                 </div>
                                 <div class="col-8">
                                     <span class="name">{{i.user.name|title}}</span><br>
@@ -38,8 +51,7 @@
                                 </div>
                             </div>
                             <div class="" >
-<!--                                <span class="location">{{i.location|title}}</span>-->
-                                <span id="right" >{{i.time}}</span>
+                                <span class="time" >{{i.time}}</span>
                             </div>
                         </div>
                         <div class="card-img">
@@ -48,7 +60,6 @@
                         <div class="card-footer">
                             <p class="caption">{{i.caption}}</p>
                             <span class="status">{{i.status}}</span>
-
                             <span class="votes" id="count_votes{{i.id}}">{{i.votes}}</span> Votes
                             <br><br>
                             <input type="hidden" name="csrfmiddlewaretoken" value="ckhUdNOTj88A...hfTnREALlks2kz">
@@ -64,10 +75,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-1"></div>
         {% endfor %}
             </div>
+        </div>
     </div>
 </body>
 </html>
